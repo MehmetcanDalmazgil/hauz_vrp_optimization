@@ -28,7 +28,8 @@ class VRP(Resource):
         for i in range(0,len(data["orders"])):
             coordinates.append([data["orders"][i]["latitude"], data["orders"][i]["longitude"]])
             order_id.append(data["orders"][i]["ord_id"])
-
+        
+        print(order_id)
         answers = path(data["parameters"]["fleet_size"],data["parameters"]["capacity"], coordinates, order_id)
         # result = {"routes": answers["routes"]}
         # jsonString = json.dumps(answers)

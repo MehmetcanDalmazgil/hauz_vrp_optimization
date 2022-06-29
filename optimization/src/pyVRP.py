@@ -12,6 +12,7 @@
 ############################################################################
 
 # Required Libraries
+from unittest.mock import seal
 import folium
 import folium.plugins
 import pandas as pd
@@ -496,6 +497,7 @@ def breeding(cost, population, fitness, distance_matrix, n_depots, elite, veloci
         parent_2 = copy.deepcopy(population[parent_2])
         rand = int.from_bytes(os.urandom(8), byteorder = 'big') / ((1 << 64) - 1)  
         # TSP - Crossover
+
         if (len(parent_1[1]) == 1 and len(parent_2[1]) == 1):
             if (rand > 0.5):
                 offspring[i] = crossover_tsp_brbax(parent_1, parent_2)
@@ -618,7 +620,8 @@ def genetic_algorithm_vrp(coordinates, distance_matrix, parameters, velocity, fi
     cost             = copy.deepcopy(cost)
     elite_cst        = copy.deepcopy(cost[0][0])
     solution         = copy.deepcopy(population[0])
-    print('Generation = ', count, ' Distance = ', elite_ind, ' f(x) = ', round(elite_cst, 2)) 
+    print('Generation = ', count, ' Distance = ', elite_ind)
+    # , ' f(x) = ', round(elite_cst, 2) 
     while (count <= generations-1): 
         offspring        = breeding(cost, population, fitness, distance_matrix, n_depots, elite, velocity, max_capacity, fixed_cost, variable_cost, penalty_value, time_window, parameters, route, vehicle_types, fleet_size)   
         offspring        = mutation(offspring, mutation_rate = mutation_rate, elite = elite)
@@ -635,12 +638,13 @@ def genetic_algorithm_vrp(coordinates, distance_matrix, parameters, velocity, fi
             solution  = copy.deepcopy(population[0])
             elite_cst = copy.deepcopy(cost[0][0])
         count = count + 1  
-        print('Generation = ', count, ' Distance = ', elite_ind, ' f(x) = ', round(elite_cst, 2))
+        print('Generation = ', count, ' Distance = ', elite_ind)
+        # ' f(x) = ', round(elite_cst, 2)
     if (graph == True):
         plot_tour_coordinates(coordinates, solution, n_depots = n_depots, route = route)
     solution_report = show_report(solution, distance_matrix, parameters, velocity, fixed_cost, variable_cost, route = route, time_window  = time_window)
     end = tm.time()
-    print('Algorithm Time: ', round((end - start), 2), ' seconds')
-    return solution_report, solution
+    # print('Algorithm Time: ', round((end - start), 2), ' seconds')
+    return solution_report, solution,elite_ind,round((end - start), 2)
    
    ############################################################################
